@@ -1,1 +1,1 @@
-Versión sin TypeScript de [json-key-change-case](https://github.com/marcegdv/json-key-change-case).
+Versión sin TypeScript de [json-key-case-changer](https://github.com/marcegdv/json-key-change-case).
