@@ -1,32 +1,3 @@
-export const toSnakeCase = (str) => {
-    return str && str
-        .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
-        .map(x => x.toLowerCase())
-        .join('_');
-};
-
-export const toKebabCase = (str) =>
-    str && str
-        .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
-        .map(x => x.toLowerCase())
-        .join('-');
-
-export const toCamelCase = (str) =>
-    str.toLowerCase()
-        .replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase());
-
-export const toPascalCase = (string) => {
-    return `${string}`
-        .toLowerCase()
-        .replace(new RegExp(/[-_]+/, 'g'), ' ')
-        .replace(new RegExp(/[^\w\s]/, 'g'), '')
-        .replace(
-            new RegExp(/\s+(.)(\w*)/, 'g'),
-            ($1, $2, $3) => `${$2.toUpperCase() + $3}`
-        )
-        .replace(new RegExp(/\w/), s => s.toUpperCase());
-};
-
 export const isScalar = (value) => {
     const isBoolean = typeof value === 'boolean';
     const isNumber = typeof value === 'number';

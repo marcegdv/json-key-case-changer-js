@@ -1,5 +1,5 @@
 import { convert, isScalar, isList, isObject, jstr } from "../src/typecase";
-import { toCamelCase as camelCase, toSnakeCase as snakeCase, toPascalCase as pascalCase } from "../src/typecase";
+import { camelCase, snakeCase, pascalCase } from "change-case";
 
 describe('jsonKeyCase functions test:', () => {
 
