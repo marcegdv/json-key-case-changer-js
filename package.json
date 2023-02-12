@@ -1,6 +1,6 @@
 {
-  "name": "demo-jest-inst",
-  "version": "1.0.1",
+  "name": "json-key-case-changer",
+  "version": "1.0.2",
   "description": "",
   "main": "index.js",
   "type": "module",

@@ -1,56 +1,46 @@
-import { convert, isScalar, isList, isObject, jstr } from "../src/typecase";
+import { convert, isValue, isList, isObject } from "../src/jsonKeyCaseChanger";
 import { camelCase, snakeCase, pascalCase } from "change-case";
 
 describe('jsonKeyCase functions test:', () => {
 
-    describe('jstr tests:', () => {
+    describe('isValue tests:', () => {
 
-        test('with a scalar, return a string', () => {
-            expect(jstr(false)).toEqual('false');
-            expect(jstr(123)).toEqual('123');
-            expect(jstr('abc')).toEqual("\"abc\"");
+        test('isValue with a boolean return true', () => {
+            expect(isValue(false)).toBeTruthy();
         });
-
-        test('with a list, return a string', () => {
-            expect(jstr([1, 2, 3])).toEqual("[\n    1,\n    2,\n    3\n]");
+        test('isValue with a number return true', () => {
+            expect(isValue(123)).toBeTruthy();
         });
-
-        test('with a object, return a string', () => {
-            expect(jstr({ id: 1 })).toEqual("{\n    \"id\": 1\n}");
+        test('isValue with a string return true', () => {
+            expect(isValue('abc')).toBeTruthy();
         });
-
-    });
-
-    describe('isScalar tests:', () => {
-
-        test('isScalar with a boolean return true', () => {
-            expect(isScalar(false)).toBeTruthy();
+        test('isValue with an ampty object return false', () => {
+            const obj = {};
+            expect(isValue(obj)).toBeFalsy();
         });
-        test('isScalar with a number return true', () => {
-            expect(isScalar(123)).toBeTruthy();
-        });
-        test('isScalar with a string return true', () => {
-            expect(isScalar('abc')).toBeTruthy();
-        });
-        test('isScalar with an object return false', () => {
+        test('isValue with an object return false', () => {
             const obj = { id: 1 };
-            expect(isScalar(obj)).toBeFalsy();
+            expect(isValue(obj)).toBeFalsy();
         });
-        test('isScalar with an array return false', () => {
+        test('isValue with an empty array return false', () => {
+            const obj = [];
+            expect(isValue(obj)).toBeFalsy();
+        });
+        test('isValue with an array return false', () => {
             const obj = [1, 2, 3];
-            expect(isScalar(obj)).toBeFalsy();
+            expect(isValue(obj)).toBeFalsy();
         });
-        test('isScalar with an array return false', () => {
+        test('isValue with an array return true', () => {
             const obj = new Date;
-            expect(isScalar(obj)).toBeFalsy();
+            expect(isValue(obj)).toBeTruthy();
         });
-        test('isScalar with null return false', () => {
+        test('isValue with null return true', () => {
             const obj = null;
-            expect(isScalar(obj)).toBeFalsy();
+            expect(isValue(obj)).toBeTruthy();
         });
-        test('isScalar with undefined return false', () => {
+        test('isValue with undefined return false', () => {
             const obj = undefined;
-            expect(isScalar(obj)).toBeFalsy();
+            expect(isValue(obj)).toBeFalsy();
         });
 
     });
@@ -66,9 +56,17 @@ describe('jsonKeyCase functions test:', () => {
         test('isList with a string return false', () => {
             expect(isList('abc')).toBeFalsy();
         });
+        test('isList with an empty object return false', () => {
+            const obj = {};
+            expect(isList(obj)).toBeFalsy();
+        });
         test('isList with an object return false', () => {
             const obj = { id: 1 };
             expect(isList(obj)).toBeFalsy();
+        });
+        test('isList with an empty array return true', () => {
+            const obj = [];
+            expect(isList(obj)).toBeTruthy();
         });
         test('isList with an array return true', () => {
             const obj = [1, 2, 3];
@@ -101,11 +99,16 @@ describe('jsonKeyCase functions test:', () => {
             expect(isObject('abc')).toBeFalsy();
         });
         test('isObject with empty object, return true', () => {
-            expect(isObject({})).toBeTruthy();
+            const obj = {};
+            expect(isObject(obj)).toBeTruthy();
         });
         test('isObject with an object return true', () => {
             const obj = { id: 1 };
             expect(isObject(obj)).toBeTruthy();
+        });
+        test('isObject with empty array, return false', () => {
+            const obj = [];
+            expect(isObject(obj)).toBeFalsy();
         });
         test('isObject with an array return false', () => {
             const obj = [1, 2, 3];
@@ -128,15 +131,21 @@ describe('jsonKeyCase functions test:', () => {
 
     describe('convert tests:', () => {
 
-        test('with an scalar and any strategy, return the scalar', () => {
+        test('with an value and any strategy, return the value', () => {
+            const date = new Date;
             expect(convert(false, camelCase)).toEqual(false);
             expect(convert(123, snakeCase)).toEqual(123);
             expect(convert('abc', pascalCase)).toEqual('abc');
+            expect(convert(date, camelCase)).toEqual(date);
+            expect(convert(null, snakeCase)).toEqual(null);
         });
-        test('with a list of scalars and any startegy, return list of scalars', () => {
+        test('with a list of values and any startegy, return list of values', () => {
+            const date = new Date;
             expect(convert([false, true], camelCase)).toEqual([false, true]);
             expect(convert([1, 2, 3], snakeCase)).toEqual([1, 2, 3]);
             expect(convert(['abc', '123'], pascalCase)).toEqual(['abc', '123']);
+            expect(convert([date, date], camelCase)).toEqual([date, date]);
+            expect(convert([null, null], camelCase)).toEqual([null, null]);
         });
         test('with an empty list/object and any strategy, return the empty list', () => {
             expect(convert([], camelCase)).toEqual([]);
@@ -153,9 +162,9 @@ describe('jsonKeyCase functions test:', () => {
                     'jd', 'Johny'
                 ],
                 location: {
-                    fullAddress: 'Fake street 123',
-                    city: 'LA',
-                    number: null,
+                    fullAddress: 'Fake street 123', city: 'LA', number: null,
+                    extraInfo: null,
+                    timeStamp: new Date,
                 },
             };
             const expected = {
@@ -166,9 +175,9 @@ describe('jsonKeyCase functions test:', () => {
                     'jd', 'Johny'
                 ],
                 location: {
-                    full_address: 'Fake street 123',
-                    city: 'LA',
-                    number: null,
+                    full_address: 'Fake street 123', city: 'LA', number: null,
+                    extra_info: null,
+                    time_stamp: new Date,
                 },
             };
             expect(convert(origin, snakeCase)).toStrictEqual(expected);
