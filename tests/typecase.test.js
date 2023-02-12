@@ -57,20 +57,20 @@ describe('jsonKeyCase functions test:', () => {
 
     describe('isList tests:', () => {
 
-        test('isList with a boolean return true', () => {
+        test('isList with a boolean return false', () => {
             expect(isList(false)).toBeFalsy();
         });
-        test('isList with a number return true', () => {
+        test('isList with a number return false', () => {
             expect(isList(123)).toBeFalsy();
         });
-        test('isList with a string return true', () => {
+        test('isList with a string return false', () => {
             expect(isList('abc')).toBeFalsy();
         });
         test('isList with an object return false', () => {
             const obj = { id: 1 };
             expect(isList(obj)).toBeFalsy();
         });
-        test('isList with an array return false', () => {
+        test('isList with an array return true', () => {
             const obj = [1, 2, 3];
             expect(isList(obj)).toBeTruthy();
         });
@@ -91,19 +91,19 @@ describe('jsonKeyCase functions test:', () => {
 
     describe('isObject tests:', () => {
 
-        test('isObject with a boolean return true', () => {
+        test('isObject with a boolean return false', () => {
             expect(isObject(false)).toBeFalsy();
         });
-        test('isObject with a number return true', () => {
+        test('isObject with a number return false', () => {
             expect(isObject(123)).toBeFalsy();
         });
-        test('isObject with a string return true', () => {
+        test('isObject with a string return false', () => {
             expect(isObject('abc')).toBeFalsy();
         });
         test('isObject with empty object, return true', () => {
             expect(isObject({})).toBeTruthy();
         });
-        test('isObject with an object return false', () => {
+        test('isObject with an object return true', () => {
             const obj = { id: 1 };
             expect(isObject(obj)).toBeTruthy();
         });
@@ -155,6 +155,7 @@ describe('jsonKeyCase functions test:', () => {
                 location: {
                     fullAddress: 'Fake street 123',
                     city: 'LA',
+                    number: null,
                 },
             };
             const expected = {
@@ -167,6 +168,7 @@ describe('jsonKeyCase functions test:', () => {
                 location: {
                     full_address: 'Fake street 123',
                     city: 'LA',
+                    number: null,
                 },
             };
             expect(convert(origin, snakeCase)).toStrictEqual(expected);
